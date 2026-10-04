@@ -2,6 +2,10 @@
 ### Ultra-Low-Latency Dual-Loop Orchestration, Zero-Stale Multi-Step Tool Execution & Connected Ecosystem Extension
 
 > **Theme:** Samsung PRISM — Theme 05: Interruptible Real-Time Agents  
+> **Team:** Chromastone (Ramaiah Institute of Technology)  
+> **Official Submission Tag:** `PRISM_GENAI_HACKATHON_Y2026`  
+> **🎥 Demo Video (YouTube):** [https://youtu.be/b8b5v0DbuN8](https://youtu.be/b8b5v0DbuN8)  
+> **📊 Presentation Deck:** [`Ramaiah_Institute_of_Technology_Chromastone_Submission.pdf`](Ramaiah_Institute_of_Technology_Chromastone_Submission.pdf)  
 > **Architecture:** Decoupled Fast-Path (<150ms) & Slow-Path (Background Multi-Tool) Event Loops  
 > **Platform Target:** Consumer Mobile, In-Cabin Automotive (Harman Cockpit) & Smart IoT (SmartThings)  
 > **Target Runtime:** Python 3.10–3.12 | Cross-Platform (Linux, macOS, Windows) | Docker Compatible  
@@ -15,7 +19,7 @@ To make evaluation as fast and frictionless as possible, select your preferred e
 
 | What you want to evaluate | Command to Run | API Keys Needed? | Estimated Time |
 |:---|:---|:---:|:---:|
-| **Turnkey Full Reproduction** (All tests, scenarios, FDB-v3 & extension) | `python reproduce.py`<br>*(or `./reproduce.sh` on Linux/macOS)* | Optional (falls back to deterministic mock if no key) | ~45 seconds |
+| **Official FDB-v3 Benchmark Reproduction** (starts the LiveKit agent, runs the benchmark, LLM judge) | `python reproduce.py --limit 8`<br>*(or `./reproduce.sh` on Linux/macOS, which runs all scenarios)* | **Yes** - all 4 keys in `.env.local`, plus the benchmark dataset (see Section 4, Option A) | Depends on scenario count (cloud STT/LLM/TTS per scenario) |
 | **Offline Code Health & Unit Tests** (19 automated tests) | `pytest -v` | **No** (100% offline) | ~4 seconds |
 | **Interruption & Concurrency Engine** (Virtual Clock Streaming Scenarios) | `python run_harness.py --all` | **No** (100% offline) | ~8 seconds |
 | **Connected Vehicle & SmartThings Extension** (20% Rubric Score) | `python extension/demo_scenarios.py` | **No** (100% offline) | ~3 seconds |
@@ -40,19 +44,23 @@ Conventional voice agents suffer from two catastrophic failure modes:
 
 ---
 
-## 2. Benchmark Verification Results (Full-Duplex-Bench v3)
+## 2. Benchmark Results (Full-Duplex-Bench v3)
 
-Evaluated with the official LLM Judge (`gpt-4o`) across released test scenarios spanning **Ecommerce Support**, **Finance & Banking**, **Housing & Location**, and **Travel & Identity**:
+Measured on a **balanced 8-scenario subset** of the FDB-v3 released data (not all 100 recordings), scored by the benchmark's LLM judge (`gpt-4o`). The subset spans **Ecommerce Support**, **Finance & Billing**, **Housing & Location**, and **Travel & Identity**. Raw reports from this run are committed in [`results/`](results/).
 
-| Metric | Industry Baseline (Cascaded) | ThreadWeave Production Score | Evaluation Status |
-|:---|:---:|:---:|:---:|
-| **Turn-Taking Success Rate** | 62.5% | **100.0% (8/8)** | ✅ Perfect |
-| **Tool Selection Accuracy (F1)** | 71.4% | **100.0%** | ✅ Perfect |
-| **Argument Extraction Accuracy** | 58.3% | **100.0% (8/8)** | ✅ Perfect |
-| **Response Quality (Grounded Intent)**| 65.0% | **100.0%** | ✅ Perfect |
-| **Strict Scenario Pass Rate** | 50.0% | **100.0% (8/8)** | ✅ Perfect |
-| **Average Perceived Latency** | 3,800ms – 6,200ms | **< 150ms** (FastPath Filler) | ✅ Optimal |
-| **Duplicate / Stale Mutations** | Frequent | **0.0% (Zero)** | ✅ Perfect |
+| Metric (FDB-v3, 8 scenarios) | ThreadWeave |
+|:---|:---:|
+| **Turn-taking success** | 100% (8/8) |
+| **Tool selection accuracy** | 100% |
+| **Argument accuracy** | 100% |
+| **Response quality** | 100% |
+| **Strict pass rate** | 100% (8/8) |
+| **Spoken interruptions** | 0 / 8 |
+| **Avg. spoken response latency** | 16.2 s (min 10.95 s, max 21.35 s) |
+
+> **Honest note on latency:** the end-to-end FDB-v3 latency above is dominated by the cloud STT, GPT-4o and TTS round trips of the cascaded pipeline. The **sub-150 ms** figure refers to the Fast Path filler in the offline virtual-clock harness (`run_harness.py`), and the **1.1 ms** figure is the measured `CancellationToken` abort time. They measure different things and should not be compared with the 16.2 s number.
+>
+> Results were produced while the project was still named *DuplexSync*; the project was later renamed to *ThreadWeave*, which is why the saved report files carry the old name in their original filenames.
 
 ---
 
@@ -61,9 +69,10 @@ Evaluated with the official LLM Judge (`gpt-4o`) across released test scenarios 
 To help judges inspect and verify specific components, here is a directory map of all primary execution scripts:
 
 ```
-├── reproduce.sh / reproduce.py       # 🌟 OFFICIAL ONE-COMMAND EVALUATION SCRIPT
-│                                     # Runs environment checks, pytest suite, virtual-clock
-│                                     # streaming scenarios, FDB-v3 tool runner, and extension demo.
+├── reproduce.sh / reproduce.py       # 🌟 OFFICIAL FDB-v3 REPRODUCTION SCRIPT
+│                                     # Checks credentials + dataset, starts the LiveKit agent, runs the
+│                                     # FDB-v3 benchmark, runs the LLM-judge evaluation, prints scores.
+│                                     # (Tests, harness and extension are run separately - see Option B.)
 │
 ├── run_harness.py                    # ⚡ VIRTUAL-CLOCK STREAMING HARNESS
 │                                     # Simulates sub-millisecond timeline events (user transcripts,
@@ -95,28 +104,35 @@ To help judges inspect and verify specific components, here is a directory map o
 
 ## 4. Step-by-Step Setup & Execution Instructions
 
-### Option A: The One-Command Reproduction (Recommended for Judges)
+### Option A: Official FDB-v3 Benchmark Reproduction (Recommended for Judges)
 
-This turnkey script automates everything in sequence:
+`reproduce.py` / `reproduce.sh` is the one-command pipeline. In order, it: (1) checks the 4 API credentials, (2) locates the benchmark dataset, (3) starts the ThreadWeave LiveKit agent in the background, (4) runs the FDB-v3 tool benchmark against it, (5) runs the benchmark's LLM-judge evaluation, (6) prints the summary and writes `threadweave_evaluation_report.json` and `threadweave_pass_rate_report.json`, then (7) shuts the agent down.
 
-**On Linux / macOS:**
+**Prerequisites (3 steps, one time):**
+
+1. **Install dependencies** (Python 3.10-3.12):
+   ```bash
+   pip install -r requirements.txt -r requirements_livekit.txt
+   ```
+2. **Add credentials.** Copy the template and fill in your own keys (see Section 9 for where to get each). Keys are never committed.
+   ```bash
+   cp .env.local.example .env.local        # Windows: copy .env.local.example .env.local
+   ```
+3. **Download the benchmark dataset** (about 700 MB; too large for git, so it is not in this repo). Download `fdb_v3_data.zip` from the Google Drive link in [`Full-Duplex-Bench/v3/README.md`](Full-Duplex-Bench/v3/README.md) and place it in `Full-Duplex-Bench/v3/`. The script extracts it automatically.
+
+**Run it:**
+
 ```bash
-# 1. (Optional) Provide API credentials if running live cloud models
-cp .env.local.example .env.local
-
-# 2. Run reproduction
+# Linux / macOS (runs every scenario; this script has no --limit flag)
 chmod +x reproduce.sh
 ./reproduce.sh
+
+# Windows / cross-platform
+python reproduce.py --limit 8      # quick run over 8 scenarios
+python reproduce.py                # full run over every scenario in the dataset
 ```
 
-**On Windows:**
-```powershell
-# 1. (Optional) Create .env.local from template
-copy .env.local.example .env.local
-
-# 2. Run reproduction script
-python reproduce.py
-```
+The script exits with a clear message if a key or the dataset is missing, rather than failing partway through.
 
 ---
 
@@ -298,7 +314,7 @@ T=1.4s      tool_result (call_id: 102):                    receive result       
 
 ## 8. Extension Use Case: Connected Vehicle & SmartThings (20% Rubric Score)
 
-The competition requires extending the agent to a novel use case beyond the standard benchmark. ThreadWeave provides a fully functional **Connected Digital Cockpit & SmartThings Integration** located in [`extension/`](file:///d:/New%20folder%20(12)/5%20samsung%20prism/extension):
+The competition requires extending the agent to a novel use case beyond the standard benchmark. ThreadWeave provides a fully functional **Connected Digital Cockpit & SmartThings Integration** located in [`extension/`](extension):
 
 - **In-Cabin Driving Scenarios:**
   - **Dynamic Mid-Route Rerouting:** Driver asks for coffee, then abruptly changes to an EV fast charger while navigation calculation is in flight. The agent cancels the stale route calculation and switches to the charging station.
@@ -323,7 +339,7 @@ For running the live WebRTC LiveKit voice agent or the LLM benchmark judge:
 | **LiveKit API Secret** | `LIVEKIT_API_SECRET` | [cloud.livekit.io](https://cloud.livekit.io) | JWT token signing secret |
 | **OpenAI API Key** | `OPENAI_API_KEY` | [platform.openai.com](https://platform.openai.com) | Whisper STT, GPT-4o LLM reasoning, TTS, & LLM evaluation judge |
 
-> **Security Note:** Never commit `.env` or `.env.local` to Git. A template is provided in [`.env.local.example`](file:///d:/New%20folder%20(12)/5%20samsung%20prism/.env.local.example).
+> **Security Note:** Never commit `.env` or `.env.local` to Git. A template is provided in [`.env.local.example`](.env.local.example).
 
 ---
 

@@ -1,0 +1,369 @@
+{
+  "benchmark_name": "In-the-Wild Speech & Multi-Step Tool Calling",
+  "evaluated_at": "2026-09-25T13:49:03.204901",
+  "total_scenarios": 8,
+  "overall_pass_rate": 1.0,
+  "passed": 8,
+  "failed": 0,
+  "failure_breakdown": {
+    "wrong_tools": 0,
+    "wrong_arguments": 0
+  },
+  "by_domain": {
+    "ecommerce_support": 1.0,
+    "finance_billing": 1.0,
+    "housing_location": 1.0,
+    "travel_identity": 1.0
+  },
+  "by_difficulty": {
+    "easy": 1.0
+  },
+  "by_num_tools": {
+    "1": 1.0
+  },
+  "by_disfluency_feature": {},
+  "by_state_rollback": {
+    "with_rollback": null,
+    "without_rollback": 1.0
+  },
+  "scenario_results": [
+    {
+      "scenario_id": "ecommerce_01",
+      "domain": "ecommerce_support",
+      "difficulty": "easy",
+      "title": "Simple Order Tracking",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "track_order"
+          ],
+          "actual": [
+            "track_order"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "track_order",
+              "passed": true,
+              "expected_args": {
+                "order_id": "ABC123"
+              },
+              "actual_args": {
+                "order_id": "ABC123"
+              },
+              "explanation": "The provided order_id matches the expected value exactly."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "ecommerce_02",
+      "domain": "ecommerce_support",
+      "difficulty": "easy",
+      "title": "Simple Product Search",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "search_products"
+          ],
+          "actual": [
+            "search_products"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "search_products",
+              "passed": true,
+              "expected_args": {
+                "query": "wireless headphones",
+                "max_price": 100
+              },
+              "actual_args": {
+                "query": "wireless headphones",
+                "max_price": 100.0
+              },
+              "explanation": "The query matches exactly and the numeric max_price is the same value (100 vs 100.0) within allowed tolerance."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "finance_01",
+      "domain": "finance_billing",
+      "difficulty": "easy",
+      "title": "Simple Currency Exchange",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "get_exchange_rate"
+          ],
+          "actual": [
+            "get_exchange_rate"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "get_exchange_rate",
+              "passed": true,
+              "expected_args": {
+                "amount": 500,
+                "from_currency": "USD",
+                "to_currency": "EUR"
+              },
+              "actual_args": {
+                "amount": 500.0,
+                "from_currency": "USD",
+                "to_currency": "EUR"
+              },
+              "explanation": "All fields match; numeric value 500.0 is within tolerance of expected 500, and currency strings are identical."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "finance_02",
+      "domain": "finance_billing",
+      "difficulty": "easy",
+      "title": "Check Card Benefits",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "get_card_benefits"
+          ],
+          "actual": [
+            "get_card_benefits"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "get_card_benefits",
+              "passed": true,
+              "expected_args": {
+                "card_type": "platinum"
+              },
+              "actual_args": {
+                "card_type": "platinum"
+              },
+              "explanation": "The provided argument matches the expected card_type value exactly."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "housing_01",
+      "domain": "housing_location",
+      "difficulty": "easy",
+      "title": "Simple Apartment Search",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "search_apartments"
+          ],
+          "actual": [
+            "search_apartments"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "search_apartments",
+              "passed": true,
+              "expected_args": {
+                "city": "Seattle",
+                "bedrooms": 2,
+                "max_price": 2500
+              },
+              "actual_args": {
+                "city": "Seattle",
+                "bedrooms": 2,
+                "max_price": 2500.0
+              },
+              "explanation": "All fields match; city and bedrooms are identical, and max_price 2500.0 is within the allowed numeric tolerance (exact match)."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "housing_02",
+      "domain": "housing_location",
+      "difficulty": "easy",
+      "title": "Simple Commute Check",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "calculate_commute"
+          ],
+          "actual": [
+            "calculate_commute"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "calculate_commute",
+              "passed": true,
+              "expected_args": {
+                "origin_address": "101 Main Street",
+                "destination_address": "Downtown Office",
+                "mode": "driving"
+              },
+              "actual_args": {
+                "origin_address": "101 Main Street",
+                "destination_address": "downtown office",
+                "mode": "driving"
+              },
+              "explanation": "All required fields are present; 'downtown office' matches 'Downtown Office' despite case difference, which is allowed."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "travel_01",
+      "domain": "travel_identity",
+      "difficulty": "easy",
+      "title": "Simple Flight Search",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "search_flights"
+          ],
+          "actual": [
+            "search_flights"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "search_flights",
+              "passed": true,
+              "expected_args": {
+                "destination": "Tokyo",
+                "date": "July 15"
+              },
+              "actual_args": {
+                "destination": "Tokyo",
+                "date": "2026-07-15"
+              },
+              "explanation": "Destination matches exactly and the date format difference (July 15 vs 2026-07-15) is acceptable per formatting rules."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    },
+    {
+      "scenario_id": "travel_02",
+      "domain": "travel_identity",
+      "difficulty": "easy",
+      "title": "Update Passport Number",
+      "num_tools": 1,
+      "disfluency": [],
+      "state_rollback": false,
+      "passed": true,
+      "checks": {
+        "tool_selection": {
+          "passed": true,
+          "expected": [
+            "update_identity_doc"
+          ],
+          "actual": [
+            "update_identity_doc"
+          ],
+          "missing": [],
+          "unexpected": []
+        },
+        "argument_accuracy": {
+          "passed": true,
+          "details": [
+            {
+              "function": "update_identity_doc",
+              "passed": true,
+              "expected_args": {
+                "doc_type": "passport",
+                "doc_number": "P9-9-9-90011"
+              },
+              "actual_args": {
+                "doc_type": "passport",
+                "doc_number": "P9-9-9-90011"
+              },
+              "explanation": "The provided arguments exactly match the expected doc_type and doc_number."
+            }
+          ]
+        }
+      },
+      "failure_reason": ""
+    }
+  ]
+}
