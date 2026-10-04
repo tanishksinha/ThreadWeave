@@ -33,7 +33,7 @@ Existing conversational voice agents suffer from two catastrophic failure modes:
 
 To run the complete benchmark and reproduction pipeline end-to-end:
 
-### On Linux / macOS (Judges' Environment):
+### On Linux / macOS:
 ```bash
 # 1. Provide API credentials in .env.local
 cp .env.local.example .env.local
