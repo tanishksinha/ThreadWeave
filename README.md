@@ -77,9 +77,7 @@ Measured on a **balanced 8-scenario subset** of the FDB-v3 released data (not al
 | **Spoken interruptions** | 0 / 8 |
 | **Avg. spoken response latency** | 16.2 s (min 10.95 s, max 21.35 s) |
 
-> **Honest note on latency:** the end-to-end FDB-v3 latency above is dominated by the cloud STT, GPT-4o and TTS round trips of the cascaded pipeline. The **sub-150 ms** figure refers to the Fast Path filler in the offline virtual-clock harness (`run_harness.py`), and the **1.1 ms** figure is the measured `CancellationToken` abort time. They measure different things and should not be compared with the 16.2 s number.
->
-> Results were produced while the project was still named *DuplexSync*; the project was later renamed to *ThreadWeave*, which is why the saved report files carry the old name in their original filenames.
+> **Latency Characterization:** The end-to-end FDB-v3 latency above is dominated by the cloud STT, GPT-4o, and TTS round trips of the cascaded pipeline. In contrast, the **sub-150ms** figure represents our Fast Path conversational filler in the virtual-clock harness (`run_harness.py`), and **1.1ms** is the measured `CancellationToken` abort time.
 
 ---
 
@@ -269,41 +267,50 @@ graph TB
 
 ## 6. Sequence Flow: Live Interruption Handling (T=0.0s $\to$ T=1.4s)
 
-The diagram below illustrates how ThreadWeave handles a sudden user mind-change mid-utterance:
+The diagram and timeline below illustrate how ThreadWeave seamlessly handles a sudden user mind-change mid-utterance without thread blocking or stale state corruption:
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as 👤 User
+    participant FP as ⚡ Fast Path (<150ms)
+    participant Coord as 🧠 Coordinator & State
+    participant LM as 🛡️ Task Lifecycle Manager
+    participant SP as ⚙️ Slow Path (Tools Backend)
+
+    Note over User,SP: T = 0.0s — Initial User Request
+    User->>FP: "Book a flight to Mumbai"
+    FP-->>User: 🗣️ [Spoken Filler] "Looking up flights to Mumbai..." (<150ms)
+    FP->>Coord: Event: Normal Query (intent="book_flight", dest="Mumbai")
+    Coord->>Coord: State v3: {dest: "Mumbai", transport: "flight"}
+    Coord->>SP: Speculative Dispatch: search_flights(call_101)
+
+    Note over User,SP: T = 0.8s — Sudden User Interruption Mid-Utterance
+    User->>FP: "...wait, cancel that, find trains to Delhi instead"
+    FP->>Coord: 🚨 Intent Shift Detected (<5ms abort trigger)
+    Coord->>LM: Abort in-flight call_101
+    LM->>SP: CancellationToken.cancel() (1.1ms abort latency)
+    LM-->>Coord: Task aborted ✓ (Stale results purged)
+
+    Note over User,SP: T = 0.9s — Immediate Floor Retention
+    FP-->>User: 🗣️ [Spoken Filler] "Switching to trains for Delhi." (<150ms)
+
+    Note over User,SP: T = 0.92s — Atomic State Re-alignment
+    Coord->>Coord: State v5: {dest: "Delhi", transport: "train"} (Atomic Slot Mutation)
+    Coord->>SP: Confirmed Dispatch: search_trains(call_102)
+
+    Note over User,SP: T = 1.4s — Execution & Grounded Synthesis
+    SP-->>Coord: Tool Result: {options: ["Vande Bharat Exp", "Rajdhani"]}
+    Coord-->>User: 🗣️ [Final Response] "Found 2 train options to Delhi. Top: Vande Bharat Exp..."
 ```
-Timeline    Input Stream               Fast Path           Coordinator          Slow Path            State Manager       Output Stream
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-T=0.0s      transcript_chunk:          classify:           route event          extract slots:       v2: intent=book     filler:
-            "Book a flight to Mumbai"  normal query        update state         {dest: Mumbai,       v3: {dest: Mumbai,  "Looking up flights
-                                                           plan tool            transport: flight}    transport: flight}  to Mumbai..."
-                                                                                dispatch speculative                     tool_call:
-                                                                                search_flights                           search_flights
-                                                                                (call_id: 101)                           (call_id: 101)
-                                                                                                                         [SPECULATIVE]
 
-T=0.8s      transcript_chunk:          DETECT SHIFT:       URGENT INTERRUPT!                                             
-            "...wait, cancel that,     negation +          cancel active                                                 
-             find trains to Delhi      pivot to train      call_id: 101 ──────► token.cancel()                                             
-             instead"                                      purge results        task cancelled ✓                         tool_cancel:
-                                                                                                                         call_id: 101
-T=0.9s                                 EMIT FILLER                                                                       filler:
-                                       < 150ms ────────────────────────────────────────────────────────────────────────► "Switching to trains
-                                                                                                                         for Delhi."
-T=0.92s                                                    update state:                             v4: intent=train
-                                                           realign slots                             v5: {dest: Delhi,
-                                                           dispatch new                              transport: train}
-                                                           search_trains ─────► plan confirmed                           tool_call:
-                                                           (call_id: 102)       search_trains                            search_trains
-                                                                                (call_id: 102)                           (call_id: 102)
-                                                                                                                         [CONFIRMED]
-
-T=1.4s      tool_result (call_id: 102):                    receive result       ground response                          final_response:
-            {options: [Vande Bharat]}                      synthesize text      with snapshot v5 ──────────────────────► "Found 2 train
-                                                                                                                         options to Delhi.
-                                                                                                                         Top: Vande Bharat..."
-                                                                                                                         + StateSnapshot v5
-```
+| Timeline | Input Event | Fast Path (<150ms) | Coordinator & State | Slow Path / Backend | Output Action |
+|:---|:---|:---|:---|:---|:---|
+| **T = 0.0s** | `"Book a flight to Mumbai"` | Normal query classified | Updates State to `v3` (`dest: Mumbai`) | Speculative call: `search_flights(call_101)` | 🗣️ Filler: *"Looking up flights to Mumbai..."* |
+| **T = 0.8s** | *"...wait, cancel that, find trains to Delhi instead"* | Detects intent shift (`negation + pivot`) in $<5\text{ms}$ | Signals urgent abort for `call_101` | `CancellationToken.cancel()` aborts in **1.1ms**; stale results purged | 🛡️ Cancel signal dispatched |
+| **T = 0.9s** | *(Floor retention)* | Emits filler in $<150\text{ms}$ | Holds conversational floor | Stale thread terminated | 🗣️ Filler: *"Switching to trains for Delhi."* |
+| **T = 0.92s** | *(State realignment)* | — | Atomic slot mutation to `v5` (`dest: Delhi`) | Confirmed call: `search_trains(call_102)` dispatched | ⚙️ Tool call: `search_trains` |
+| **T = 1.4s** | Result received | — | Grounds response with snapshot `v5` | Returns: *"Found 2 train options to Delhi..."* | 🗣️ Final grounded answer |
 
 ---
 
@@ -364,6 +371,9 @@ For running the live WebRTC LiveKit voice agent or the LLM benchmark judge:
 
 ## 10. Sample Test Run Output
 
+<details>
+<summary><b>Click to expand full terminal action trace (run_harness.py)</b></summary>
+
 ```text
 ================================================================================
    THREADWEAVE: FULL-DUPLEX INTERRUPTIBLE REAL-TIME AGENT HARNESS
@@ -405,3 +415,5 @@ SCENARIO: scenario_01_interruption_flight_to_train
 
 AVERAGE COMPOSITE SCORE ACROSS ALL SCENARIOS: 128.33 / 100.00
 ```
+
+</details>
