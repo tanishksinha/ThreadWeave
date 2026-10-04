@@ -2,14 +2,33 @@
 ### Ultra-Low-Latency Dual-Loop Orchestration, Zero-Stale Multi-Step Tool Execution & Connected Ecosystem Extension
 
 > **Theme:** Samsung PRISM — Theme 05: Interruptible Real-Time Agents  
-> **Team:** Chromastone (Ramaiah Institute of Technology)  
+> **Team:** Chromastone (Ramaiah Institute of Technology / MSRIT)  
 > **Official Submission Tag:** `PRISM_GENAI_HACKATHON_Y2026`  
 > **🎥 Demo Video (YouTube):** [https://youtu.be/b8b5v0DbuN8](https://youtu.be/b8b5v0DbuN8)  
-> **📊 Presentation Deck:** [`Ramaiah_Institute_of_Technology_Chromastone_Submission.pdf`](Ramaiah_Institute_of_Technology_Chromastone_Submission.pdf)  
+> **📊 Presentation Deck (PDF):** [`MSRIT_Chromastone_Submission.pdf`](MSRIT_Chromastone_Submission.pdf)  
+> **🎨 Presentation Deck (Canva Public Link):** [https://canva.link/ur6fxvj97prdji1](https://canva.link/ur6fxvj97prdji1)  
+> **📋 AI Usage Disclosure:** [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) / [`LangAI3.0_AI_Disclosure - Chromastone- Samsung PRISM 2027.docx`](LangAI3.0_AI_Disclosure%20-%20Chromastone-%20Samsung%20PRISM%202027.docx)  
 > **Architecture:** Decoupled Fast-Path (<150ms) & Slow-Path (Background Multi-Tool) Event Loops  
 > **Platform Target:** Consumer Mobile, In-Cabin Automotive (Harman Cockpit) & Smart IoT (SmartThings)  
 > **Target Runtime:** Python 3.10–3.12 | Cross-Platform (Linux, macOS, Windows) | Docker Compatible  
 > **Official Benchmark:** Full-Duplex-Bench v3 (NTU / NVIDIA Advisory)
+
+---
+
+## 📦 Official Submission Checklist (All Present in Tagged Commit)
+
+| Deliverable | Location in Repository | Status |
+|:---|:---|:---:|
+| **Source Code** | Core engine (`threadweave/`), LiveKit WebRTC agent (`lk_threadweave_agent.py`), automotive extension (`extension/`), FDB-v3 benchmark runner (`Full-Duplex-Bench/v3/`), and scenarios (`scenarios/`) | ✅ Included |
+| **Requirements & Dependencies** | [`requirements.txt`](requirements.txt), [`requirements_livekit.txt`](requirements_livekit.txt), [`pyproject.toml`](pyproject.toml) | ✅ Included |
+| **Docker Configuration** | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml) | ✅ Included |
+| **Presentation File (PDF)** | [`MSRIT_Chromastone_Submission.pdf`](MSRIT_Chromastone_Submission.pdf) | ✅ Included |
+| **Presentation File (Canva)** | [https://canva.link/ur6fxvj97prdji1](https://canva.link/ur6fxvj97prdji1) | ✅ Public Link |
+| **Demo Video (YouTube)** | [https://youtu.be/b8b5v0DbuN8](https://youtu.be/b8b5v0DbuN8) (Full walkthrough & live speech demo) | ✅ Unlisted Video |
+| **AI Disclosure Form** | [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) | ✅ Included |
+| **README & Reproduction Guide** | [`README.md`](README.md), [`reproduce.py`](reproduce.py), [`reproduce.sh`](reproduce.sh), [`run_harness.py`](run_harness.py) | ✅ Included |
+| **Unit & Integration Tests** | 19 automated tests passing in [`tests/`](tests/) (`pytest -v`) | ✅ Included |
+| **Official Release TAG** | `PRISM_GENAI_HACKATHON_Y2026` on final commit | ✅ Tagged & Pushed |
 
 ---
 
