@@ -1,0 +1,57 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual Environments ──
+.venv_fdb/
+.venv/
+venv/
+
+# ── Environment & Secrets ──
+.env
+.env.local
+*.local
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Pytest ──
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── Large Binary / Audio Files ──
+*.wav
+*.mp3
+*.mp4
+*.zip
+*.tar.gz
+
+# ── Benchmark WAV Data (too large for git) ──
+Full-Duplex-Bench/v3/fdb_v3_data_released/*/input.wav
+Full-Duplex-Bench/v3/fdb_v3_data_released/*/output_*.wav
+Full-Duplex-Bench/v3/__MACOSX/
+Full-Duplex-Bench/v3/__pycache__/
+Full-Duplex-Bench/v2/__pycache__/
+Full-Duplex-Bench/fdb-logo.png
+
+# ── Excluded Project Files ──
+_excluded_from_git/
+
+# ── Misc ──
+*.log
+node_modules/

@@ -1,0 +1,41 @@
+{
+  "pid": "6998abd731d2ec50d067d5bd",
+  "example_id": "finance_02",
+  "category": "finance_billing",
+  "title": "Check Card Benefits",
+  "provider": "threadweave",
+  "evaluated_at": "2026-09-25T12:51:38.123457",
+  "inference_time_s": 43.18,
+  "room_name": "eval-b5d5e14f",
+  "stream_start_time": 1790320901.0917358,
+  "input_transcript": "So could you tell me what kind of benefits come with the platinum card? I want to know if it's worth switching to. Hvað er það? Það er það er það er það.",
+  "input_asr_chunks": [],
+  "user_speech_end_rel": 0,
+  "latency": {
+    "input_duration_s": 39.429,
+    "output_duration_s": 39.429,
+    "first_speech_s": 14.95
+  },
+  "search_latency_breakdown": {
+    "room": "eval-b5d5e14f",
+    "tool": "ThreadWeave Orchestrator",
+    "reasoning": 5.018,
+    "execution": 0.0,
+    "synthesis": 2.518,
+    "total": 7.536,
+    "agent_start_at": 1790320914.3567028
+  },
+  "transcript": "The Platinum card offers 2% cashback on purchases and no foreign transaction fees, which can save you money if you spend a lot on everyday items and travel abroad. Those perks make it a solid upgrade if those benefits align with your spending habits. You're welcome. Let me know if you need anything else.",
+  "asr_chunks": [],
+  "actual_tool_calls": [
+    {
+      "function": "get_card_benefits",
+      "args": {
+        "card_type": "platinum"
+      },
+      "timestamp_start": 10.75,
+      "timestamp_end": 10.75
+    }
+  ],
+  "status": "completed"
+}

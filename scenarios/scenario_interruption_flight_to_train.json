@@ -1,0 +1,55 @@
+{
+  "name": "scenario_01_interruption_flight_to_train",
+  "description": "User speculatively requests flight to Mumbai, interrupts at T=0.8s to switch to trains for Delhi.",
+  "is_multimodal": false,
+  "tools": [
+    {
+      "name": "search_flights",
+      "description": "Search available flight options for destination",
+      "category": "read_only",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "search_trains",
+      "description": "Search available train schedules for destination",
+      "category": "read_only",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "book_flight",
+      "description": "Confirm and book a flight reservation",
+      "category": "state_modifying",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "cancel_flight_booking",
+      "description": "Compensating transaction to cancel existing flight booking",
+      "category": "state_modifying",
+      "parameters": {
+        "original_call_id": {"type": "string", "required": true}
+      }
+    }
+  ],
+  "events": [
+    {
+      "time_offset": 0.0,
+      "type": "transcript_chunk",
+      "text": "Book a flight to Mumbai",
+      "is_final": false,
+      "is_end_of_turn": false
+    },
+    {
+      "time_offset": 0.8,
+      "type": "transcript_chunk",
+      "text": "wait, cancel that, find trains to Delhi instead",
+      "is_final": true,
+      "is_end_of_turn": true
+    }
+  ]
+}

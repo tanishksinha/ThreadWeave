@@ -1,0 +1,10 @@
+# LiveKit Agents and Plugin Dependencies for ThreadWeave (Python 3.10)
+livekit-agents[openai]>=1.3.0
+livekit-plugins-silero
+livekit-plugins-openai
+livekit[crypto]>=1.0.0
+python-dotenv>=1.0.0
+numpy>=1.24.0
+pydub>=0.25.1
+ffmpeg-python>=0.2.0
+openai>=1.40.0

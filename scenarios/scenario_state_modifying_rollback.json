@@ -1,0 +1,44 @@
+{
+  "name": "scenario_03_state_modifying_rollback",
+  "description": "User requests booking, then cancels after speculative dispatch, validating compensating rollback.",
+  "is_multimodal": false,
+  "tools": [
+    {
+      "name": "book_flight",
+      "description": "Book and charge flight reservation",
+      "category": "state_modifying",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "cancel_flight_booking",
+      "description": "Compensating transaction to cancel flight booking",
+      "category": "state_modifying",
+      "parameters": {
+        "original_call_id": {"type": "string", "required": true}
+      }
+    }
+  ],
+  "events": [
+    {
+      "time_offset": 0.0,
+      "type": "transcript_chunk",
+      "text": "Book a flight to Mumbai",
+      "is_final": true,
+      "is_end_of_turn": true
+    },
+    {
+      "time_offset": 0.2,
+      "type": "interrupt_signal",
+      "reason": "user_cancelled_immediately"
+    },
+    {
+      "time_offset": 0.25,
+      "type": "transcript_chunk",
+      "text": "stop cancel that reservation immediately",
+      "is_final": true,
+      "is_end_of_turn": true
+    }
+  ]
+}

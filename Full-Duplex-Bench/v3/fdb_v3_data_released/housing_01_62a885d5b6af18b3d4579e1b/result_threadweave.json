@@ -1,0 +1,43 @@
+{
+  "pid": "62a885d5b6af18b3d4579e1b",
+  "example_id": "housing_01",
+  "category": "housing_location",
+  "title": "Simple Apartment Search",
+  "provider": "threadweave",
+  "evaluated_at": "2026-09-25T12:49:03.894922",
+  "inference_time_s": 44.04,
+  "room_name": "eval-b76a2949",
+  "stream_start_time": 1790320746.885547,
+  "input_transcript": "You know, I'm trying to find a two-bedroom apartment in Seattle, and I'd like to keep the rent under $2,500 a month if possible. Could you see what's available? Thank you.",
+  "input_asr_chunks": [],
+  "user_speech_end_rel": 0,
+  "latency": {
+    "input_duration_s": 40.32,
+    "output_duration_s": 40.32,
+    "first_speech_s": 14.9
+  },
+  "search_latency_breakdown": {
+    "room": "eval-b76a2949",
+    "tool": "ThreadWeave Orchestrator",
+    "reasoning": 0.415,
+    "execution": 0.0,
+    "synthesis": 1.086,
+    "total": 1.501,
+    "agent_start_at": 1790320760.2071855
+  },
+  "transcript": "I found a two-bedroom apartment in Seattle for $2,400 per month. Thank you.",
+  "asr_chunks": [],
+  "actual_tool_calls": [
+    {
+      "function": "search_apartments",
+      "args": {
+        "city": "Seattle",
+        "bedrooms": 2,
+        "max_price": 2500.0
+      },
+      "timestamp_start": 12.24,
+      "timestamp_end": 12.24
+    }
+  ],
+  "status": "completed"
+}

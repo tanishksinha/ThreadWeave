@@ -1,0 +1,42 @@
+{
+  "pid": "5f4a4da1575d605c43bef871",
+  "example_id": "ecommerce_02",
+  "category": "ecommerce_support",
+  "title": "Simple Product Search",
+  "provider": "threadweave",
+  "evaluated_at": "2026-09-25T12:50:43.136852",
+  "inference_time_s": 47.1,
+  "room_name": "eval-01e617f8",
+  "stream_start_time": 1790320846.1767805,
+  "input_transcript": "I'm looking for a pair of wireless headphones and I'd like to track it under $100 if possible. What do you have? Thank you.",
+  "input_asr_chunks": [],
+  "user_speech_end_rel": 0,
+  "latency": {
+    "input_duration_s": 43.336,
+    "output_duration_s": 43.336,
+    "first_speech_s": 16.45
+  },
+  "search_latency_breakdown": {
+    "room": "eval-01e617f8",
+    "tool": "ThreadWeave Orchestrator",
+    "reasoning": 0.622,
+    "execution": 0.0,
+    "synthesis": 1.718,
+    "total": 2.34,
+    "agent_start_at": 1790320860.9519477
+  },
+  "transcript": "I found a wireless headphone pair for $90, product ID Prod1 Thank you.",
+  "asr_chunks": [],
+  "actual_tool_calls": [
+    {
+      "function": "search_products",
+      "args": {
+        "query": "wireless headphones",
+        "max_price": 100.0
+      },
+      "timestamp_start": 13.06,
+      "timestamp_end": 13.06
+    }
+  ],
+  "status": "completed"
+}

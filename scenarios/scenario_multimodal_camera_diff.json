@@ -1,0 +1,56 @@
+{
+  "name": "scenario_02_multimodal_camera_diff",
+  "description": "User provides audio clip and camera frames showing visual shifts that invalidate tool parameters.",
+  "is_multimodal": true,
+  "tools": [
+    {
+      "name": "search_flights",
+      "description": "Search available flight options for destination",
+      "category": "read_only",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    },
+    {
+      "name": "search_hotels",
+      "description": "Search available hotel listings in city",
+      "category": "read_only",
+      "parameters": {
+        "destination": {"type": "string", "required": true}
+      }
+    }
+  ],
+  "events": [
+    {
+      "time_offset": 0.0,
+      "type": "audio_clip",
+      "duration_ms": 600
+    },
+    {
+      "time_offset": 0.1,
+      "type": "video_frame",
+      "frame_id": "frame_room_01",
+      "color": [50, 50, 200]
+    },
+    {
+      "time_offset": 0.2,
+      "type": "transcript_chunk",
+      "text": "Find hotels in Mumbai",
+      "is_final": false,
+      "is_end_of_turn": false
+    },
+    {
+      "time_offset": 0.6,
+      "type": "video_frame",
+      "frame_id": "frame_screen_pivot_02",
+      "color": [220, 30, 30]
+    },
+    {
+      "time_offset": 0.7,
+      "type": "transcript_chunk",
+      "text": "wait, look at this screen instead, make it hotels in Delhi",
+      "is_final": true,
+      "is_end_of_turn": true
+    }
+  ]
+}

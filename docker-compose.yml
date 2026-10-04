@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  threadweave:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: threadweave-evaluator
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app
+    volumes:
+      - ./scenarios:/app/scenarios:ro
+    command: ["python", "run_harness.py", "--all"]

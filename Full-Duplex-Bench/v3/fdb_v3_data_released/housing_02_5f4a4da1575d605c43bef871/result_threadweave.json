@@ -1,0 +1,43 @@
+{
+  "pid": "5f4a4da1575d605c43bef871",
+  "example_id": "housing_02",
+  "category": "housing_location",
+  "title": "Simple Commute Check",
+  "provider": "threadweave",
+  "evaluated_at": "2026-09-25T12:52:26.771589",
+  "inference_time_s": 48.96,
+  "room_name": "eval-8b6a62dc",
+  "stream_start_time": 1790320949.8698385,
+  "input_transcript": "Tell me how long it would take to drive from 101 Main Street to downtown office during a normal day. I want to make sure it's reasonable. Thank you.",
+  "input_asr_chunks": [],
+  "user_speech_end_rel": 0,
+  "latency": {
+    "input_duration_s": 45.136,
+    "output_duration_s": 45.136,
+    "first_speech_s": 21.35
+  },
+  "search_latency_breakdown": {
+    "room": "eval-8b6a62dc",
+    "tool": "ThreadWeave Orchestrator",
+    "reasoning": 12.807,
+    "execution": 0.0,
+    "synthesis": 1.146,
+    "total": 13.953,
+    "agent_start_at": 1790320969.749135
+  },
+  "transcript": "It'll take about 25 minutes to drive from 101 Main Street to the downtown office. Thank you.",
+  "asr_chunks": [],
+  "actual_tool_calls": [
+    {
+      "function": "calculate_commute",
+      "args": {
+        "origin_address": "101 Main Street",
+        "destination_address": "downtown office",
+        "mode": "driving"
+      },
+      "timestamp_start": 18.73,
+      "timestamp_end": 18.73
+    }
+  ],
+  "status": "completed"
+}

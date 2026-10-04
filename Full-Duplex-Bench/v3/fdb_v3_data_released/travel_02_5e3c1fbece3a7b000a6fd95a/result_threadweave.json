@@ -1,0 +1,42 @@
+{
+  "pid": "5e3c1fbece3a7b000a6fd95a",
+  "example_id": "travel_02",
+  "category": "travel_identity",
+  "title": "Update Passport Number",
+  "provider": "threadweave",
+  "evaluated_at": "2026-09-25T12:53:24.537723",
+  "inference_time_s": 48.23,
+  "room_name": "eval-21683884",
+  "stream_start_time": 1790321007.5602746,
+  "input_transcript": "Uh, yeah, so my new passport number is P889-90011. Could you update that in the system for me, please? Thank you.",
+  "input_asr_chunks": [],
+  "user_speech_end_rel": 0,
+  "latency": {
+    "input_duration_s": 44.52,
+    "output_duration_s": 44.52,
+    "first_speech_s": 16.95
+  },
+  "search_latency_breakdown": {
+    "room": "eval-21683884",
+    "tool": "ThreadWeave Orchestrator",
+    "reasoning": 3.806,
+    "execution": 0.0,
+    "synthesis": 2.402,
+    "total": 6.208,
+    "agent_start_at": 1790321023.72245
+  },
+  "transcript": "Your passport number has been updated successfully. Thank you.",
+  "asr_chunks": [],
+  "actual_tool_calls": [
+    {
+      "function": "update_identity_doc",
+      "args": {
+        "doc_type": "passport",
+        "doc_number": "P9-9-9-90011"
+      },
+      "timestamp_start": 13.76,
+      "timestamp_end": 13.76
+    }
+  ],
+  "status": "completed"
+}
